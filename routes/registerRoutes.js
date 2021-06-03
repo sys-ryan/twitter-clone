@@ -28,7 +28,8 @@ route.post("/", async (req, res, next) => {
         data.password = await bcrypt.hash(password, 10);
 
         const user = await User.create(data);
-        console.log(user);
+        req.session.user = user;
+        return res.redirect("/");
       } else {
         // User found
         if (email == user.email) {
