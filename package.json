@@ -1,0 +1,29 @@
+{
+  "name": "twitter-clone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sys-ryan/twitter-clone.git"
+  },
+  "author": "Ryan SJ Kim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sys-ryan/twitter-clone/issues"
+  },
+  "homepage": "https://github.com/sys-ryan/twitter-clone#readme",
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.7"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "pug": "^3.0.2"
+  }
+}
