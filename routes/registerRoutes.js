@@ -23,12 +23,15 @@ route.post("/", async (req, res, next) => {
 
       if (!user) {
         // No user found
+        const data = req.body;
+        const user = await User.create(data);
+        console.log(user);
       } else {
         // User found
         if (email == user.email) {
-          payload.errorMessge = "Email already in use.";
+          payload.errorMessage = "Email already in use.";
         } else {
-          payload.errorMessage = "username already in user";
+          payload.errorMessage = "username already in use";
         }
         res.status(200).render("register", payload);
       }
