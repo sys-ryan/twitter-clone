@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 
 const route = express.Router();
 
@@ -23,7 +24,9 @@ route.post("/", async (req, res, next) => {
 
       if (!user) {
         // No user found
-        const data = req.body;
+        let data = req.body;
+        data.password = await bcrypt.hash(password, 10);
+
         const user = await User.create(data);
         console.log(user);
       } else {
