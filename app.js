@@ -4,6 +4,7 @@ const express = require("express");
 require("dotenv").config();
 const bodyParser = require("body-parser");
 require("./db/mongoose");
+const session = require("express-session");
 
 const middleware = require("./middleware");
 
@@ -14,6 +15,13 @@ app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  session({
+    secret: "ryan kim",
+    resave: true,
+    saveUninitialized: false,
+  })
+);
 
 // Routes
 const loginRoute = require("./routes/loginRoutes");
@@ -25,6 +33,7 @@ app.use("/register", registerRoute);
 app.get("/", middleware.requireLogin, (req, res, next) => {
   var payload = {
     pageTitle: "Home",
+    userLoggedIn: req.session.user,
   };
   res.render("home", payload);
 });
