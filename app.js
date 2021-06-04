@@ -37,6 +37,7 @@ app.get("/", middleware.requireLogin, (req, res, next) => {
     pageTitle: "Home",
     userLoggedIn: req.session.user,
   };
+
   res.render("home", payload);
 });
 app.listen(process.env.PORT, () => {
