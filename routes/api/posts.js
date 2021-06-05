@@ -27,7 +27,6 @@ route.post("/", async (req, res, next) => {
     error.statusCode = 400;
     next(error);
   }
-
-  res.status(200).send("It worked");
 });
+
 module.exports = route;

@@ -21,6 +21,32 @@ $("#submitPostButton").click((event) => {
   };
 
   $.post("/api/posts", data, (postData, status, xhr) => {
-    console.log(postData);
+    const html = createPostHtml(postData);
+
+    $(".postsContainer").prepend(html);
+    textbox.val("");
+    button.prop("disabled", true);
   });
 });
+
+const createPostHtml = (postData) => {
+  const postedBy = postData.postedBy;
+
+  return `<div class='post'>
+            <div class='mainContentContainer'>
+              <div class='userImageContainer'>
+                <img src='${postedBy.profile}'/>
+              </div>
+              <div class='postContentContainer>
+                <div class='header'>
+                  
+                </div>
+                <div class='postBody'>
+                  <span>${postData.content}</span>
+                </div>
+                <div class='postFooter'>
+                </div>
+              </div>
+            </div>
+          </div>`;
+};
