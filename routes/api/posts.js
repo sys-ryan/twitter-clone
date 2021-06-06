@@ -4,7 +4,17 @@ const route = express.Router();
 
 const Post = require("../../models/Post");
 
-route.get("/", (req, res, next) => {});
+route.get("/", async (req, res, next) => {
+  try {
+    const posts = await Post.find();
+    res.status(200).send(posts);
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+});
 
 route.post("/", async (req, res, next) => {
   if (!req.body.content) {
@@ -23,9 +33,10 @@ route.post("/", async (req, res, next) => {
 
     res.status(201).send(newPost);
   } catch (err) {
-    const error = new Error("Could not create a new post");
-    error.statusCode = 400;
-    next(error);
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 });
 
