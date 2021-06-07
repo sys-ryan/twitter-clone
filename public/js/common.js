@@ -36,7 +36,7 @@ const createPostHtml = (postData) => {
   const displayName = `${postedBy.firstName} ${postedBy.lastName}`;
   const timestamp = timeDifference(new Date(), new Date(postData.createdAt));
 
-  return `<div class='post'>
+  return `<div class='post' data-id='${postData._id}'>
             <div class='mainContentContainer'>
               <div class='userImageContainer'>
                 <img src='${postedBy.profile}'/>
@@ -62,7 +62,7 @@ const createPostHtml = (postData) => {
                     </button>
                   </div>
                   <div class='postButtonContainer'>
-                    <button>
+                    <button class='likeButton'>
                       <i class='far fa-heart'></i>
                     </button>
                   </div>
@@ -96,3 +96,21 @@ function timeDifference(current, previous) {
     return Math.round(elapsed / msPerYear) + " years ago";
   }
 }
+
+$(document).on("click", ".likeButton", (event) => {
+  const button = $(event.target);
+  const postId = getPostIdFromElement(button);
+  console.log(postId);
+});
+
+const getPostIdFromElement = (element) => {
+  const isRoot = element.hasClass("post");
+  const rootElement = isRoot ? element : element.closest(".post");
+  const postId = rootElement.data().id; //data-id
+
+  if (!postId) {
+    return console.log("Post id undefined");
+  }
+
+  return postId;
+};
