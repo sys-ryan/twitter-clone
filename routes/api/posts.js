@@ -6,7 +6,9 @@ const Post = require("../../models/Post");
 
 route.get("/", async (req, res, next) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find()
+      .populate("postedBy")
+      .sort({ createdAt: -1 });
     res.status(200).send(posts);
   } catch (err) {
     if (!err.statusCode) {
