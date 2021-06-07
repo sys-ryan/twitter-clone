@@ -3,6 +3,7 @@ const express = require("express");
 const route = express.Router();
 
 const Post = require("../../models/Post");
+const User = require("../../models/User");
 
 route.get("/", async (req, res, next) => {
   try {
@@ -40,6 +41,22 @@ route.post("/", async (req, res, next) => {
     }
     next(err);
   }
+});
+
+route.put("/:id/like", async (req, res, next) => {
+  const postId = req.params.id;
+  const userId = req.session.user._id;
+
+  const isLiked =
+    req.session.user.likes && req.session.user.likes.includes(postId);
+
+  let option = isLiked ? "$pull" : "$addToSet";
+  // insert user like
+  await User.findByIdAndUpdate(userId, { [option]: { likes: postId } }); // $addToSet (add) <--> $pull (remove)
+
+  // insert post like
+
+  res.status(200).send("Google");
 });
 
 module.exports = route;
