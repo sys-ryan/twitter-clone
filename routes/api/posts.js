@@ -52,11 +52,28 @@ route.put("/:id/like", async (req, res, next) => {
 
   let option = isLiked ? "$pull" : "$addToSet";
   // insert user like
-  await User.findByIdAndUpdate(userId, { [option]: { likes: postId } }); // $addToSet (add) <--> $pull (remove)
 
-  // insert post like
+  try {
+    req.session.user = await User.findByIdAndUpdate(
+      userId,
+      { [option]: { likes: postId } },
+      { new: true }
+    ); // $addToSet (add) <--> $pull (remove)
 
-  res.status(200).send("Google");
+    // insert post like
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { [option]: { likes: userId } },
+      { new: true }
+    );
+
+    res.status(200).send(post);
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
 });
 
 module.exports = route;
