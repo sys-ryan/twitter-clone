@@ -43,7 +43,9 @@ const createPostHtml = (postData) => {
               </div>
               <div class='postContentContainer'>
                 <div class='header'>
-                  <a href='/profile/${postedBy.username}' class='displayName'>${displayName}</a>
+                  <a href='/profile/${
+                    postedBy.username
+                  }' class='displayName'>${displayName}</a>
                   <span class='username'>${postedBy.username}</span>
                   <span class='date'>${timestamp}</span>
                 </div>
@@ -64,6 +66,7 @@ const createPostHtml = (postData) => {
                   <div class='postButtonContainer'>
                     <button class='likeButton'>
                       <i class='far fa-heart'></i>
+                      <span>${postData.likes.length || ""}</span>
                     </button>
                   </div>
                 </div>
@@ -109,7 +112,7 @@ $(document).on("click", ".likeButton", (event) => {
     url: `/api/posts/${postId}/like`,
     type: "PUT",
     success: (postData) => {
-      console.log(postData.likes.length);
+      button.find("span").text(postData.likes.length || "");
     },
   });
 });

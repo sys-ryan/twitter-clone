@@ -59,6 +59,12 @@ button {
   border: none;
   color: var(--grayButtonText);
 }
+
+button i,
+button span {
+  pointer-events: none;
+}
+
 .mainSectionContainer {
   padding: 0;
   border-left: 1px solid var(--lightGrey);
