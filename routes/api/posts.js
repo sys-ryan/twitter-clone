@@ -9,7 +9,10 @@ route.get("/", async (req, res, next) => {
   try {
     const posts = await Post.find()
       .populate("postedBy")
+      .populate("retweetData")
+      .populate("retweetData.postedBy")
       .sort({ createdAt: -1 });
+
     res.status(200).send(posts);
   } catch (err) {
     if (!err.statusCode) {
@@ -71,6 +74,45 @@ route.put("/:id/like", async (req, res, next) => {
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
+    }
+    next(error);
+  }
+});
+
+route.post("/:id/retweet", async (req, res, next) => {
+  const postId = req.params.id;
+  const userId = req.session.user._id;
+
+  try {
+    // Try and elete retweet
+    const deletedPost = await Post.findOneAndDelete({
+      postedBy: userId,
+      retweetData: postId,
+    });
+
+    const option = deletedPost ? "$pull" : "$addToSet";
+    let repost = deletedPost;
+
+    if (!repost) {
+      repost = await Post.create({ postedBy: userId, retweetData: postId });
+    }
+
+    req.session.user = await User.findByIdAndUpdate(
+      userId,
+      { [option]: { retweets: repost._id } },
+      { new: true }
+    );
+
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { [option]: { retweetUsers: userId } },
+      { new: true }
+    );
+
+    return res.status(200).send(post);
+  } catch (error) {
+    if (!error.statusCode) {
+      statusCode = 500;
     }
     next(error);
   }

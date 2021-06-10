@@ -14,10 +14,22 @@ const PostSchema = new Schema(
       ref: "User",
     },
     pinned: Boolean,
-    likes: [{
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    retweetUsers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    retweetData: {
       type: Schema.Types.ObjectId,
-      ref: 'User'
-    }]
+      ref: "Post",
+    },
   },
   { timestamps: true }
 );

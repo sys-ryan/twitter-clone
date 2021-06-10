@@ -30,13 +30,26 @@ $("#submitPostButton").click((event) => {
 });
 
 const createPostHtml = (postData) => {
-  console.log(postData);
+  if (!postData) {
+    console.log("post object is null");
+  }
+
+  const isRetweet = postData.retweetData !== undefined;
+  const retweetedBy = isRetweet ? postData.postedBy.username : "";
+  postData = isRetweet ? postData.retweetData : postData;
+
   const postedBy = postData.postedBy;
 
   const displayName = `${postedBy.firstName} ${postedBy.lastName}`;
   const timestamp = timeDifference(new Date(), new Date(postData.createdAt));
 
   const likeButtonActiveClass = postData.likes.includes(userLoggedIn._id)
+    ? "active"
+    : "";
+
+  const retweetButtonActiveClass = postData.retweetUsers.includes(
+    userLoggedIn._id
+  )
     ? "active"
     : "";
 
@@ -63,8 +76,9 @@ const createPostHtml = (postData) => {
                     </button>
                   </div>
                   <div class='postButtonContainer green'>
-                    <button class='retweet'>
+                    <button class='retweetButton ${retweetButtonActiveClass}'>
                       <i class='fas fa-retweet'></i>
+                      <span>${postData.retweetUsers.length || ""}</span>
                     </button>
                   </div>
                   <div class='postButtonContainer red'>
@@ -138,3 +152,26 @@ const getPostIdFromElement = (element) => {
 
   return postId;
 };
+
+$(document).on("click", ".retweetButton", (event) => {
+  const button = $(event.target);
+  const postId = getPostIdFromElement(button);
+
+  if (!postId) return;
+
+  $.ajax({
+    url: `/api/posts/${postId}/retweet`,
+    type: "POST",
+    success: (postData) => {
+      button.find("span").text(postData.retweetUsers.length || "");
+
+      console.log(postData.retweetUsers);
+
+      if (postData.retweetUsers.includes(userLoggedIn._id)) {
+        button.addClass("active");
+      } else {
+        button.removeClass("active");
+      }
+    },
+  });
+});
