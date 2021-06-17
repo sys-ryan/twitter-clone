@@ -136,11 +136,13 @@ route.post("/:id/retweet", async (req, res, next) => {
 
 const getPosts = async (filter) => {
   try {
-    const result = await Post.find(filter)
+    let result = await Post.find(filter)
       .populate("postedBy")
       .populate("retweetData")
+      .populate("replyTo")
       .sort({ createdAt: -1 });
 
+    result = await User.populate(result, { path: "replyTo.postedBy" });
     return await User.populate(result, { path: "retweetData.postedBy" });
   } catch (error) {
     if (!error.statusCode) {
