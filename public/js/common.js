@@ -1,8 +1,12 @@
-$("#postTextarea").keyup((event) => {
+$("#postTextarea, #replyTextarea").keyup((event) => {
   const textbox = $(event.target);
   const value = textbox.val().trim();
 
-  const submitButton = $("#submitPostButton");
+  const isModal = textbox.parents(".modal").length == 1;
+
+  const submitButton = isModal
+    ? $("#submitReplyButton")
+    : $("#submitPostButton");
 
   if (value == "") {
     submitButton.prop("disabled", true);
