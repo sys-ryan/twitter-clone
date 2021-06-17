@@ -135,6 +135,15 @@ function timeDifference(current, previous) {
   }
 }
 
+$("#replyModal").on("show.bs.modal", (event) => {
+  const button = $(event.relatedTarget);
+  const postId = getPostIdFromElement(button);
+
+  let post = $.get(`/api/posts/${postId}`).then((result) => {
+    outputPosts(result, $("#originalPostContainer"));
+  });
+});
+
 $(document).on("click", ".likeButton", (event) => {
   const button = $(event.target);
   const postId = getPostIdFromElement(button);
@@ -190,3 +199,20 @@ $(document).on("click", ".retweetButton", (event) => {
     },
   });
 });
+
+function outputPosts(results, container) {
+  container.html("");
+
+  if (!Array.isArray(results)) {
+    results = [results];
+  }
+
+  results.forEach((result) => {
+    var html = createPostHtml(result);
+    container.append(html);
+  });
+
+  if (results.length == 0) {
+    container.append("<span class='noResults'>Nothing to show</span>");
+  }
+}

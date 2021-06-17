@@ -6,21 +6,31 @@ const Post = require("../../models/Post");
 const User = require("../../models/User");
 
 route.get("/", async (req, res, next) => {
-  try {
-    let posts = await Post.find()
-      .populate("postedBy")
-      .populate("retweetData")
-      .sort({ createdAt: -1 });
+  // try {
+  //   let posts = await Post.find()
+  //     .populate("postedBy")
+  //     .populate("retweetData")
+  //     .sort({ createdAt: -1 });
 
-    posts = await User.populate(posts, { path: "retweetData.postedBy" });
+  //   posts = await User.populate(posts, { path: "retweetData.postedBy" });
 
-    res.status(200).send(posts);
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-  }
+  //   res.status(200).send(posts);
+  // } catch (err) {
+  //   if (!err.statusCode) {
+  //     err.statusCode = 500;
+  //   }
+  //   next(err);
+  // }
+
+  const posts = await getPosts({});
+  res.send(posts);
+});
+
+route.get("/:id", async (req, res, next) => {
+  const postId = req.params.id;
+
+  const posts = await getPosts({ _id: postId });
+  res.send(posts[0]);
 });
 
 route.post("/", async (req, res, next) => {
@@ -118,5 +128,21 @@ route.post("/:id/retweet", async (req, res, next) => {
     next(error);
   }
 });
+
+const getPosts = async (filter) => {
+  try {
+    const result = await Post.find(filter)
+      .populate("postedBy")
+      .populate("retweetData")
+      .sort({ createdAt: -1 });
+
+    return await User.populate(result, { path: "retweetData.postedBy" });
+  } catch (error) {
+    if (!error.statusCode) {
+      statusCode = 500;
+    }
+    next(error);
+  }
+};
 
 module.exports = route;
