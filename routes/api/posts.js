@@ -7,11 +7,12 @@ const User = require("../../models/User");
 
 route.get("/", async (req, res, next) => {
   try {
-    const posts = await Post.find()
+    let posts = await Post.find()
       .populate("postedBy")
       .populate("retweetData")
-      .populate("retweetData.postedBy")
       .sort({ createdAt: -1 });
+
+    posts = await User.populate(posts, { path: "retweetData.postedBy" });
 
     res.status(200).send(posts);
   } catch (err) {
@@ -84,7 +85,7 @@ route.post("/:id/retweet", async (req, res, next) => {
   const userId = req.session.user._id;
 
   try {
-    // Try and elete retweet
+    // Try and delete retweet
     const deletedPost = await Post.findOneAndDelete({
       postedBy: userId,
       retweetData: postId,

@@ -12,6 +12,7 @@ const PostSchema = new Schema(
     postedBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     pinned: Boolean,
     likes: [

@@ -53,7 +53,20 @@ const createPostHtml = (postData) => {
     ? "active"
     : "";
 
+  let retweetText = "";
+  if (isRetweet) {
+    retweetText = `
+      <span>
+        <i class='fas fa-retweet'></i>
+        Retweeted by <a href='/profile/${retweetedBy}'>@${retweetedBy}</a>
+      </span>
+    `;
+  }
+
   return `<div class='post' data-id='${postData._id}'>
+            <div class='postActionContainer'>
+              ${retweetText}
+            </div>
             <div class='mainContentContainer'>
               <div class='userImageContainer'>
                 <img src='${postedBy.profile}'/>
@@ -71,7 +84,7 @@ const createPostHtml = (postData) => {
                 </div>
                 <div class='postFooter'>
                   <div class='postButtonContainer'>
-                    <button>
+                    <button data-toggle='modal' data-target='#replyModal'>
                       <i class='far fa-comment'></i>
                     </button>
                   </div>
@@ -164,8 +177,6 @@ $(document).on("click", ".retweetButton", (event) => {
     type: "POST",
     success: (postData) => {
       button.find("span").text(postData.retweetUsers.length || "");
-
-      console.log(postData.retweetUsers);
 
       if (postData.retweetUsers.includes(userLoggedIn._id)) {
         button.addClass("active");
