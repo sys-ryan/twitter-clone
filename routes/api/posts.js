@@ -34,6 +34,7 @@ route.get("/:id", async (req, res, next) => {
 });
 
 route.post("/", async (req, res, next) => {
+  console.log(req.body);
   if (!req.body.content) {
     console.log("Content param not sent with requesrt");
     return res.sendStatus(400);
@@ -43,6 +44,10 @@ route.post("/", async (req, res, next) => {
     content: req.body.content,
     postedBy: req.session.user,
   };
+
+  if (req.body.replyTo) {
+    postData.replyTo = req.body.replyTo;
+  }
 
   try {
     let newPost = await Post.create(postData);
