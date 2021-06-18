@@ -6,22 +6,6 @@ const Post = require("../../models/Post");
 const User = require("../../models/User");
 
 route.get("/", async (req, res, next) => {
-  // try {
-  //   let posts = await Post.find()
-  //     .populate("postedBy")
-  //     .populate("retweetData")
-  //     .sort({ createdAt: -1 });
-
-  //   posts = await User.populate(posts, { path: "retweetData.postedBy" });
-
-  //   res.status(200).send(posts);
-  // } catch (err) {
-  //   if (!err.statusCode) {
-  //     err.statusCode = 500;
-  //   }
-  //   next(err);
-  // }
-
   const posts = await getPosts({});
   res.send(posts);
 });
@@ -141,6 +125,18 @@ route.post("/:id/retweet", async (req, res, next) => {
   } catch (error) {
     if (!error.statusCode) {
       statusCode = 500;
+    }
+    next(error);
+  }
+});
+
+route.delete("/:id", async (req, res, next) => {
+  try {
+    await Post.findByIdAndDelete(req.params.id);
+    res.sendStatus(202);
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
     }
     next(error);
   }
