@@ -1,0 +1,12 @@
+extends layouts/main-layout.pug
+
+block content
+  body
+    .postsContainer
+
+    +createReplyModal(userLoggedIn)
+
+
+block scripts 
+  script(src="/js/postPage.js")
+  

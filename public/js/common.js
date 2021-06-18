@@ -233,6 +233,15 @@ $(document).on("click", ".retweetButton", (event) => {
   });
 });
 
+$(document).on("click", ".post", (event) => {
+  const element = $(event.target);
+  const postId = getPostIdFromElement(element);
+
+  if (postId && !element.is("button")) {
+    window.location.href = "/posts/" + postId;
+  }
+});
+
 function outputPosts(results, container) {
   container.html("");
 
