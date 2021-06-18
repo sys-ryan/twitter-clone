@@ -29,8 +29,20 @@ route.get("/", async (req, res, next) => {
 route.get("/:id", async (req, res, next) => {
   const postId = req.params.id;
 
-  const posts = await getPosts({ _id: postId });
-  res.send(posts[0]);
+  let postData = await getPosts({ _id: postId });
+  postData = postData[0];
+
+  const results = {
+    postData,
+  };
+
+  if (postData.replyTo) {
+    results.replyTo = postData.replyTo;
+  }
+
+  results.replies = await getPosts({ replyTo: postId });
+
+  res.status(200).send(results);
 });
 
 route.post("/", async (req, res, next) => {

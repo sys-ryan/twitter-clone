@@ -48,7 +48,7 @@ $("#submitPostButton, #submitReplyButton").click((event) => {
   });
 });
 
-const createPostHtml = (postData) => {
+const createPostHtml = (postData, largeFont = false) => {
   if (!postData) {
     console.log("post object is null");
   }
@@ -72,6 +72,8 @@ const createPostHtml = (postData) => {
     ? "active"
     : "";
 
+  const largeFontClass = largeFont ? "largeFont" : "";
+
   let retweetText = "";
   if (isRetweet) {
     retweetText = `
@@ -83,7 +85,7 @@ const createPostHtml = (postData) => {
   }
 
   let replyFlag = "";
-  if (postData.replyTo) {
+  if (postData.replyTo && postData.replyTo._id) {
     if (!postData.replyTo._id) {
       return console.log("replyTo is not populated");
     }
@@ -94,7 +96,7 @@ const createPostHtml = (postData) => {
               </div>`;
   }
 
-  return `<div class='post' data-id='${postData._id}'>
+  return `<div class='post ${largeFontClass}' data-id='${postData._id}'>
             <div class='postActionContainer'>
               ${retweetText}
             </div>
@@ -169,7 +171,7 @@ $("#replyModal").on("show.bs.modal", (event) => {
   $("#submitReplyButton").data("id", postId);
 
   let post = $.get(`/api/posts/${postId}`).then((result) => {
-    outputPosts(result, $("#originalPostContainer"));
+    outputPosts(result.postData, $("#originalPostContainer"));
   });
 });
 
@@ -258,3 +260,20 @@ function outputPosts(results, container) {
     container.append("<span class='noResults'>Nothing to show</span>");
   }
 }
+
+const outputPostsWithReplies = (results, container) => {
+  container.html("");
+
+  if (results.replyTo && results.replyTo._id) {
+    const html = createPostHtml(results.replyTo);
+    container.append(html);
+  }
+
+  const mainPostHtml = createPostHtml(results.postData, true);
+  container.append(mainPostHtml);
+
+  results.replies.forEach((result) => {
+    const html = createPostHtml(result);
+    container.append(html);
+  });
+};

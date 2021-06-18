@@ -225,3 +225,8 @@ button span {
   color: var(--grayText);
   margin-bottom: 5px;
 }
+
+.post.largeFont .postBody,
+.post.largeFont .postFooter {
+  font-size: 23px;
+}
