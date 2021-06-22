@@ -14,6 +14,26 @@ route.get("/", async (req, res, next) => {
     delete searchObj.isReply;
   }
 
+  if (searchObj.followingOnly) {
+    const followingOnly = searchObj.followingOnly == "true";
+
+    if (followingOnly) {
+      const objectIds = [];
+
+      if (!req.session.user.following) {
+        req.session.user.following = [];
+      }
+
+      req.session.user.following.forEach((user) => {
+        objectIds.push(user);
+      });
+      objectIds.push(req.session.user._id); // own post
+
+      searchObj.postedBy = { $in: objectIds };
+    }
+    delete searchObj.followingOnly;
+  }
+
   const posts = await getPosts(searchObj);
   res.send(posts);
 });
