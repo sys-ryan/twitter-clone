@@ -19,7 +19,6 @@ route.get("/", (req, res, next) => {
 
 route.get("/:username", async (req, res, next) => {
   const payload = await getPayload(req.params.username, req.session.user);
-
   res.status(200).render("profilePage", payload);
 });
 
@@ -46,4 +45,10 @@ const getPayload = async (username, userLoggedIn) => {
   };
 };
 
+route.get("/:username/replies", async (req, res, next) => {
+  let payload = await getPayload(req.params.username, req.session.user);
+  payload.selectedTab = "replies";
+
+  res.status(200).render("profilePage", payload);
+});
 module.exports = route;
