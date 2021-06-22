@@ -37,4 +37,28 @@ route.put("/:userId/follow", async (req, res, next) => {
   }
 });
 
+route.get("/:userId/following", async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId).populate("following");
+    res.status(200).send(user);
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+});
+
+route.get("/:userId/followers", async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId).populate("followers");
+    res.status(200).send(user);
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+});
+
 module.exports = route;
