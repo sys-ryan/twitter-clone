@@ -241,8 +241,18 @@ $(document).on("click", ".followButton", (event) => {
   $.ajax({
     url: `/api/users/${userId}/follow`,
     type: "PUT",
-    success: (data) => {
-      console.log(data);
+    success: (data, status, xhr) => {
+      if (xhr.status === 404) {
+        return;
+      }
+
+      if (data.following && data.following.includes(userId)) {
+        button.addClass("following");
+        button.text("Following");
+      } else {
+        button.removeClass("following");
+        button.text("Follow");
+      }
     },
   });
 });
