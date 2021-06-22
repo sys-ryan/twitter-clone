@@ -234,6 +234,19 @@ $(document).on("click", ".likeButton", (event) => {
   });
 });
 
+$(document).on("click", ".followButton", (event) => {
+  const button = $(event.target);
+  const userId = button.data().user;
+
+  $.ajax({
+    url: `/api/users/${userId}/follow`,
+    type: "PUT",
+    success: (data) => {
+      console.log(data);
+    },
+  });
+});
+
 const getPostIdFromElement = (element) => {
   const isRoot = element.hasClass("post");
   const rootElement = isRoot ? element : element.closest(".post");
