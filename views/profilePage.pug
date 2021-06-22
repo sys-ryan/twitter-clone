@@ -4,6 +4,8 @@ block content
   if !profileUser
     span.errorMessage Check the url you're trying to access
   else
+    script.
+      var profileUserId = '!{profileUser._id}'
     .profileHeaderContainer
       .coverPhotoContainer
       
@@ -30,7 +32,7 @@ block content
       +createTab("Posts", `/profile/${profileUser.username}`, true)
       +createTab("PosRepliests", `/profile/${profileUser.username}/replies`, false)
 
-    .postContainer
+    .postsContainer
 
     +createPostModals(userLoggedIn)
 

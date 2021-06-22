@@ -6,7 +6,15 @@ const Post = require("../../models/Post");
 const User = require("../../models/User");
 
 route.get("/", async (req, res, next) => {
-  const posts = await getPosts({});
+  const searchObj = req.query;
+
+  if (searchObj.isReply) {
+    const isReply = searchObj.isReply === "true";
+    searchObj.replyTo = { $exists: isReply };
+    delete searchObj.isReply;
+  }
+
+  const posts = await getPosts(searchObj);
   res.send(posts);
 });
 
