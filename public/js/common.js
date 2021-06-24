@@ -211,6 +211,19 @@ $("#deletePostButton").click((event) => {
   });
 });
 
+$("#filePhoto").change((event) => {
+  const input = event.target;
+
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      $("#imagePreview").attr("src", e.target.result);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  }
+});
+
 $(document).on("click", ".likeButton", (event) => {
   const button = $(event.target);
   const postId = getPostIdFromElement(button);
