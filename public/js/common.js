@@ -248,7 +248,16 @@ $("#imageUploadButton").click(() => {
     const formData = new FormData();
     formData.append("croppedImage", blob);
 
-    console.log(formData);
+    $.ajax({
+      url: `/api/users/profilePicture`,
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: () => {
+        location.reload();
+      },
+    });
   });
 });
 
