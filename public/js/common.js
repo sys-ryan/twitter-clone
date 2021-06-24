@@ -237,6 +237,21 @@ $("#filePhoto").change((event) => {
   }
 });
 
+$("#imageUploadButton").click(() => {
+  const canvas = cropper.getCroppedCanvas();
+
+  if (!canvas) {
+    return alert("Could not upload image. Make sure it is an image file.");
+  }
+
+  canvas.toBlob((blob) => {
+    const formData = new FormData();
+    formData.append("croppedImage", blob);
+
+    console.log(formData);
+  });
+});
+
 $(document).on("click", ".likeButton", (event) => {
   const button = $(event.target);
   const postId = getPostIdFromElement(button);
