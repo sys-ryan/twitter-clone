@@ -1,3 +1,6 @@
+// Globals
+let cropper;
+
 $("#postTextarea, #replyTextarea").keyup((event) => {
   const textbox = $(event.target);
   const value = textbox.val().trim();
@@ -217,7 +220,17 @@ $("#filePhoto").change((event) => {
   if (input.files && input.files[0]) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      $("#imagePreview").attr("src", e.target.result);
+      const image = document.getElementById("imagePreview");
+      image.src = e.target.result;
+
+      if (cropper) {
+        cropper.destroy();
+      }
+
+      cropper = new Cropper(image, {
+        aspectRatio: 1 / 1,
+        backgroudn: false,
+      });
     };
 
     reader.readAsDataURL(input.files[0]);
