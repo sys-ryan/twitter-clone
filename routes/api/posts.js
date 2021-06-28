@@ -58,7 +58,6 @@ route.get("/:id", async (req, res, next) => {
 });
 
 route.post("/", async (req, res, next) => {
-  console.log(req.body);
   if (!req.body.content) {
     console.log("Content param not sent with requesrt");
     return res.sendStatus(400);

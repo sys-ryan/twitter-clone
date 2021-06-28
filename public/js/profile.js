@@ -7,7 +7,6 @@ $(document).ready(() => {
 });
 
 const loadPosts = () => {
-  console.log(profileUserId);
   $.get(
     "/api/posts",
     { postedBy: profileUserId, isReply: false },
@@ -18,7 +17,6 @@ const loadPosts = () => {
 };
 
 const loadReplies = () => {
-  console.log(profileUserId);
   $.get("/api/posts", { postedBy: profileUserId, isReply: true }, (results) => {
     outputPosts(results, $(".postsContainer"));
   });
