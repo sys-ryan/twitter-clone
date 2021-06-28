@@ -6,7 +6,6 @@ const User = require("../models/User");
 const route = express.Router();
 
 route.get("/", (req, res, next) => {
-  console.log(req.session.user);
   const payload = {
     pageTitle: req.session.user.username,
     userLoggedIn: req.session.user,

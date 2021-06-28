@@ -74,19 +74,23 @@ route.post(
       return res.sendStatus(400);
     }
 
-    console.log(req.file.path);
-
     const filePath = `/uploads/images/${req.file.filename}.png`;
     const tempPath = req.file.path;
     const targetPath = path.join(__dirname, `../../${filePath}`);
 
-    fs.rename(tempPath, targetPath, (error) => {
+    fs.rename(tempPath, targetPath, async (error) => {
       if (error) {
         console.log(error);
         return res.sendStatus(400);
       }
 
-      res.sendStatus(200);
+      req.session.user = await User.findByIdAndUpdate(
+        req.session.user._id,
+        { profilePic: filePath },
+        { new: true }
+      );
+
+      res.sendStatus(204);
     });
   }
 );
