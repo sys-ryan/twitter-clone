@@ -201,12 +201,35 @@ $("#deletePostModal").on("show.bs.modal", (event) => {
   $("#deletePostButton").data("id", postId);
 });
 
+$("#confirmPinModal").on("show.bs.modal", (event) => {
+  const button = $(event.relatedTarget);
+  const postId = getPostIdFromElement(button);
+  $("#pinPostButton").data("id", postId);
+});
+
 $("#deletePostButton").click((event) => {
   const postId = $(event.target).data("id");
 
   $.ajax({
     url: `/api/posts/${postId}`,
     type: "DELETE",
+    success: (data, status, xhr) => {
+      //data: returned data
+      //status: success message
+      //xhr.status: status Code
+
+      location.reload();
+    },
+  });
+});
+
+$("#pinPostButton").click((event) => {
+  const postId = $(event.target).data("id");
+
+  $.ajax({
+    url: `/api/posts/${postId}`,
+    type: "PUT",
+    data: { pinned: true },
     success: (data, status, xhr) => {
       //data: returned data
       //status: success message
