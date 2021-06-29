@@ -101,8 +101,16 @@ const createPostHtml = (postData, largeFont = false) => {
 
   let buttons = "";
   if (postData.postedBy._id == userLoggedIn._id) {
+    let pinnedclass = "";
+    console.log(postData.pinned);
+    if (postData.pinned === true) {
+      pinnedClass = "active";
+    } else {
+      pinnedClass = "";
+    }
+
     buttons = `
-      <button data-id="${postData._id}" data-toggle="modal" data-target="#confirmPinModal">
+      <button class="pinButton ${pinnedClass}" data-id="${postData._id}" data-toggle="modal" data-target="#confirmPinModal">
         <i class="fas fa-thumbtack"></i>
       </button>
       <button data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal">
