@@ -30,6 +30,7 @@ const logoutRoute = require("./routes/logout");
 const postRoute = require("./routes/postRoute");
 const profileRoute = require("./routes/profileRoute");
 const uploadRoute = require("./routes/uploadRoutes");
+const searchRoute = require("./routes/searchRoutes");
 
 // API routes
 const postsApiRoutes = require("./routes/api/posts");
@@ -41,6 +42,7 @@ app.use("/logout", logoutRoute);
 app.use("/posts", middleware.requireLogin, postRoute);
 app.use("/profile", middleware.requireLogin, profileRoute);
 app.use("/uploads", uploadRoute);
+app.use("/search", middleware.requireLogin, searchRoute);
 
 app.use("/api/posts", postsApiRoutes);
 app.use("/api/users", usersApiRoutes);
