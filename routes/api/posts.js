@@ -169,6 +169,23 @@ route.delete("/:id", async (req, res, next) => {
   }
 });
 
+route.put("/:id", async (req, res, next) => {
+  try {
+    console.log(req.body);
+    if (req.body.pinned) {
+      await Post.updateMany({ postedBy: req.session.user }, { pinned: false });
+    }
+
+    await Post.findByIdAndUpdate(req.params.id, req.body);
+    res.sendStatus(204);
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+});
+
 const getPosts = async (filter) => {
   try {
     let result = await Post.find(filter)
