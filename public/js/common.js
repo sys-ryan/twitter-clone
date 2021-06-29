@@ -100,13 +100,17 @@ const createPostHtml = (postData, largeFont = false) => {
   }
 
   let buttons = "";
+  let pinnedPostText = "";
   if (postData.postedBy._id == userLoggedIn._id) {
     let pinnedclass = "";
     console.log(postData.pinned);
     if (postData.pinned === true) {
       pinnedClass = "active";
+      pinnedPostText =
+        "<i class='fas fa-thumbtack'></i> <span>Pinned post</span>";
     } else {
       pinnedClass = "";
+      pinnedPostText = "";
     }
 
     buttons = `
@@ -128,6 +132,7 @@ const createPostHtml = (postData, largeFont = false) => {
                 <img src='${postedBy.profilePic}'/>
               </div>
               <div class='postContentContainer'>
+                <div class='pinnedPostText'>${pinnedPostText}</div>
                 <div class='header'>
                   <a href='/profile/${
                     postedBy.username
