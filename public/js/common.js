@@ -103,18 +103,20 @@ const createPostHtml = (postData, largeFont = false) => {
   let pinnedPostText = "";
   if (postData.postedBy._id == userLoggedIn._id) {
     let pinnedclass = "";
-    console.log(postData.pinned);
+    let dataTarget = "#confirmPinModal";
     if (postData.pinned === true) {
       pinnedClass = "active";
+      dataTarget = "#unpinModal";
       pinnedPostText =
         "<i class='fas fa-thumbtack'></i> <span>Pinned post</span>";
     } else {
       pinnedClass = "";
       pinnedPostText = "";
+      dataTarget = "#confirmPinModal";
     }
 
     buttons = `
-      <button class="pinButton ${pinnedClass}" data-id="${postData._id}" data-toggle="modal" data-target="#confirmPinModal">
+      <button class="pinButton ${pinnedClass}" data-id="${postData._id}" data-toggle="modal" data-target="${dataTarget}">
         <i class="fas fa-thumbtack"></i>
       </button>
       <button data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal">
@@ -220,6 +222,12 @@ $("#confirmPinModal").on("show.bs.modal", (event) => {
   $("#pinPostButton").data("id", postId);
 });
 
+$("#unpinModal").on("show.bs.modal", (event) => {
+  const button = $(event.relatedTarget);
+  const postId = getPostIdFromElement(button);
+  $("#unpinPostButton").data("id", postId);
+});
+
 $("#deletePostButton").click((event) => {
   const postId = $(event.target).data("id");
 
@@ -243,6 +251,23 @@ $("#pinPostButton").click((event) => {
     url: `/api/posts/${postId}`,
     type: "PUT",
     data: { pinned: true },
+    success: (data, status, xhr) => {
+      //data: returned data
+      //status: success message
+      //xhr.status: status Code
+
+      location.reload();
+    },
+  });
+});
+
+$("#unpinPostButton").click((event) => {
+  const postId = $(event.target).data("id");
+
+  $.ajax({
+    url: `/api/posts/${postId}`,
+    type: "PUT",
+    data: { pinned: false },
     success: (data, status, xhr) => {
       //data: returned data
       //status: success message
