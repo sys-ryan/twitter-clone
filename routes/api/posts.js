@@ -171,7 +171,6 @@ route.delete("/:id", async (req, res, next) => {
 
 route.put("/:id", async (req, res, next) => {
   try {
-    console.log(req.body);
     if (req.body.pinned) {
       await Post.updateMany({ postedBy: req.session.user }, { pinned: false });
     }
