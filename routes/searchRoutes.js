@@ -18,6 +18,7 @@ function createPaylod(userLoggedIn) {
     pageTitle: "Search",
     userLoggedIn: userLoggedIn,
     userLoggedInJs: JSON.stringify(userLoggedIn),
+    selectedTab: "posts",
   };
 }
 
