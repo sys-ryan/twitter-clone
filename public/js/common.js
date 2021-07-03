@@ -1,5 +1,6 @@
 // Globals
 let cropper;
+let timer;
 
 $("#postTextarea, #replyTextarea").keyup((event) => {
   const textbox = $(event.target);
@@ -323,6 +324,27 @@ $("#coverPhoto").change((event) => {
   }
 });
 
+$("#userSearchTextbox").keydown((event) => {
+  clearTimeout(timer);
+  const textbox = $(event.target);
+  let value = textbox.val();
+
+  if (value == "" && event.keycode == 8) {
+    //delete the added user
+    return;
+  }
+
+  timer = setTimeout(() => {
+    value = textbox.val().trim();
+
+    if (value == "") {
+      $(".resultsContainer").html("");
+    } else {
+      searchUsers(value);
+    }
+  }, 1000);
+});
+
 $("#imageUploadButton").click(() => {
   const canvas = cropper.getCroppedCanvas();
 
@@ -545,4 +567,8 @@ const createUserHtml = (userData, showFollowButton) => {
       ${followButton}
     </div>
   `;
+};
+
+const searchUsers = (searchTerm) => {
+  console.log("hi");
 };
