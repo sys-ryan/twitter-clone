@@ -1,6 +1,7 @@
 // Globals
 let cropper;
 let timer;
+let selectedUsers = [];
 
 $("#postTextarea, #replyTextarea").keyup((event) => {
   const textbox = $(event.target);
@@ -570,5 +571,39 @@ const createUserHtml = (userData, showFollowButton) => {
 };
 
 const searchUsers = (searchTerm) => {
-  console.log("hi");
+  $.get("/api/users", { search: searchTerm }, (results) => {
+    outputSelectableUsers(results, $(".resultsContainer"));
+  });
 };
+
+function outputSelectableUsers(results, container) {
+  container.html("");
+
+  results.forEach((result) => {
+    if (
+      result._id == userLoggedIn._id ||
+      selectedUsers.some((u) => u._id == result._id)
+    ) {
+      return;
+    }
+
+    let html = createUserHtml(result, true);
+
+    let element = $(html);
+    element.click(() => userSelected(result));
+
+    container.append(element);
+  });
+
+  if (results.length == 0) {
+    container.append("<span class='noResults'>No results found</span>");
+  }
+}
+
+function userSelected(user) {
+  selectedUsers.push(user);
+
+  $("#userSearchTextbox").val("").focus();
+  $(".resultsContainer").html("");
+  $("#createChatButton").prop("disabled", false);
+}
