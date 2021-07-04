@@ -45,6 +45,7 @@ mixin createPostModals(userLoggedIn)
   +createReplyModal(userLoggedIn)
   +createDeletePostModal()
   +createPinnedpostModal()
+  +createUnpinPostModal()
 
 
 
@@ -109,7 +110,7 @@ mixin createPinnedpostModal()
           button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
           button#pinPostButton.btn.btn-primary(type='button') Pin
 
-mixin  ()
+mixin createUnpinPostModal()
   #unpinModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='unpinModalLabel', aria-hidden='true')
     .modal-dialog(role='document')
       .modal-content
