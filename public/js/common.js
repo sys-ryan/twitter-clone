@@ -377,6 +377,15 @@ $("#imageUploadButton").click(() => {
   });
 });
 
+$("#createChatButton").click(() => {
+  let data = JSON.stringify(selectedUsers);
+  $.post("/api/chats", { users: data }, (chat) => {
+    if (!chat || !chat._id) return alert("Invalid response from the server");
+
+    window.location.href = `/messages/${chat._id}`;
+  });
+});
+
 $("#coverPhotoUploadButton").click(() => {
   const canvas = cropper.getCroppedCanvas();
 
