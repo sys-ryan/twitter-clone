@@ -21,11 +21,12 @@ function outputChatList(chatList, container) {
 
 function createChatHtml(chatData) {
   let chatName = getChatName(chatData); // TODO
-  let image = ""; // TODO
+  let image = getChatImageElements(chatData); // TODO
   let latestMessage = "This is the latest message";
 
   return `
     <a href="/messages/${chatData._id}" class="resultListItem">
+    ${image}
       <div class="resultsDetailsContainer">
         <span class="heading">${chatName}</span>
         <span class="subText">${latestMessage}</span>
@@ -54,4 +55,28 @@ function getOtherChatUsers(users) {
   }
 
   return users.filter((user) => user._id !== userLoggedIn._id);
+}
+
+function getChatImageElements(chatData) {
+  const otherChatUsers = getOtherChatUsers(chatData.users);
+
+  let groupChatClass = "";
+  let chatImage = getUserChatImageElement(otherChatUsers[0]);
+
+  if (otherChatUsers.length > 1) {
+    groupChatClass = "groupChatImage";
+    chatImage += getUserChatImageElement(otherChatUsers[1]);
+  }
+
+  return `<div class="resultsImageContainer ${groupChatClass}">${chatImage}</div>`;
+}
+
+function getUserChatImageElement(user) {
+  if (!user || !user.profilePic) {
+    return alert("User passed into function is invalid");
+  }
+
+  return `
+    <img src="${user.profilePic}" alt="User's profile pic">
+  `;
 }
