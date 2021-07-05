@@ -34,4 +34,18 @@ route.post("/", async (req, res, next) => {
   }
 });
 
+route.get("/", async (req, res, next) => {
+  try {
+    const results = await Chat.find({
+      users: { $elemMatch: { $eq: req.session.user._id } },
+    });
+    res.status(200).send(results);
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+});
+
 module.exports = route;
