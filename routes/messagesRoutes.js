@@ -20,4 +20,13 @@ route.get("/new", (req, res, next) => {
   res.status(200).render("newMessage", payload);
 });
 
+route.get("/:chatId", (req, res, next) => {
+  let payload = {
+    pageTitle: "Chat",
+    userLoggedIn: req.session.user,
+    userLoggedInJs: JSON.stringify(req.session.user),
+  };
+  res.status(200).render("chatPage", payload);
+});
+
 module.exports = route;
