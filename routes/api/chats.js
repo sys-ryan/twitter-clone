@@ -38,7 +38,7 @@ route.get("/", async (req, res, next) => {
   try {
     const results = await Chat.find({
       users: { $elemMatch: { $eq: req.session.user._id } },
-    });
+    }).populate("users");
     res.status(200).send(results);
   } catch (error) {
     if (!error.statusCode) {
