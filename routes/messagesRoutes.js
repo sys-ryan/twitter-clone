@@ -42,7 +42,7 @@ route.get("/:chatId", async (req, res, next) => {
   }
 
   try {
-    const chat = await Chat.findOne({
+    let chat = await Chat.findOne({
       _id: chatId,
       users: { $elemMatch: { $eq: userId } },
     }).populate("users");
@@ -53,6 +53,7 @@ route.get("/:chatId", async (req, res, next) => {
 
       if (userFound) {
         //get chat using user id
+        chat = await getChatByUserId(userFound._id, userId);
       }
     }
     console.log("chat", chat);
@@ -69,5 +70,33 @@ route.get("/:chatId", async (req, res, next) => {
   console.log(payload.errorMessage);
   res.status(200).render("chatPage", payload);
 });
+
+async function getChatByUserId(userLoggedInId, otherUserId) {
+  return await Chat.findOneAndUpdate(
+    {
+      //filtering the data
+      isGroupChat: false,
+      users: {
+        $size: 2,
+        $all: [
+          // $all : all of the following conditions are met
+          { $elemMatch: { $eq: mongoose.Types.ObjectId(userLoggedInId) } },
+          { $elemMatch: { $eq: mongoose.Types.ObjectId(otherUserId) } },
+        ],
+      },
+    },
+    {
+      // data to be updated
+      $setOnInsert: {
+        users: [userLoggedInId, otherUserId],
+      },
+    },
+    {
+      //options
+      new: true,
+      upsert: true, //if you don't find it, create it.
+    }
+  ).populate("users");
+}
 
 module.exports = route;
