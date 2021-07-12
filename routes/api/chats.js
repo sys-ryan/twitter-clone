@@ -61,4 +61,20 @@ route.put("/:chatId", async (req, res, next) => {
     next(error);
   }
 });
+
+route.get("/:chatId", async (req, res, next) => {
+  try {
+    const results = await Chat.findOne({
+      _id: req.params.chatId,
+      users: { $elemMatch: { $eq: req.session.user._id } },
+    }).populate("users");
+    res.status(200).send(results);
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+});
+
 module.exports = route;
