@@ -50,4 +50,15 @@ route.get("/", async (req, res, next) => {
   }
 });
 
+route.put("/:chatId", async (req, res, next) => {
+  try {
+    const results = await Chat.findByIdAndUpdate(req.params.chatId, req.body);
+    res.sendStatus(204);
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+});
 module.exports = route;
