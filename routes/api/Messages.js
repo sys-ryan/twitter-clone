@@ -18,7 +18,9 @@ route.post("/", async (req, res, next) => {
   };
 
   try {
-    const results = await Message.create(newMessage);
+    let results = await Message.create(newMessage);
+    results = await results.populate("sender").populate("chat").execPopulate();
+    console.log(results);
     res.status(201).send(results);
   } catch (error) {
     if (!error.statusCode) {
