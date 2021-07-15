@@ -18,10 +18,11 @@ route.post("/", async (req, res, next) => {
   };
 
   try {
-    let results = await Message.create(newMessage);
-    results = await results.populate("sender").populate("chat").execPopulate();
-    console.log(results);
-    res.status(201).send(results);
+    let message = await Message.create(newMessage);
+    message = await message.populate("sender").populate("chat").execPopulate();
+
+    await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
+    res.status(201).send(message);
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
