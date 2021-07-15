@@ -5,13 +5,14 @@ $(document).ready(() => {
 });
 
 $("#chatNameButton").click(() => {
-  const name = $("#chatNameTextbox").val().trim();
+  var name = $("#chatNameTextbox").val().trim();
+
   $.ajax({
-    url: `/api/chats/${chatId}`,
+    url: "/api/chats/" + chatId,
     type: "PUT",
     data: { chatName: name },
     success: (data, status, xhr) => {
-      if (xhr.status !== 204) {
+      if (xhr.status != 204) {
         alert("could not update");
       } else {
         location.reload();
@@ -32,18 +33,22 @@ $(".inputTextbox").keydown((event) => {
 });
 
 function messageSubmitted() {
-  const content = $(".inputTextbox").val().trim();
+  var content = $(".inputTextbox").val().trim();
 
-  if (content !== "") {
+  if (content != "") {
     sendMessage(content);
     $(".inputTextbox").val("");
   }
 }
 
 function sendMessage(content) {
-  $.post(`/api/messages`, { content, chatId }, (data, status, xhr) => {
-    addChatMessageHtml(data);
-  });
+  $.post(
+    "/api/messages",
+    { content: content, chatId: chatId },
+    (data, status, xhr) => {
+      addChatMessageHtml(data);
+    }
+  );
 }
 
 function addChatMessageHtml(message) {
@@ -52,21 +57,20 @@ function addChatMessageHtml(message) {
     return;
   }
 
-  const messageDiv = createMessageHtml(message);
+  var messageDiv = createMessageHtml(message);
+
   $(".chatMessages").append(messageDiv);
 }
 
 function createMessageHtml(message) {
-  const isMine = message.sender._id === userLoggedIn._id;
-  const liClassName = isMine ? "mine" : "theirs";
+  var isMine = message.sender._id == userLoggedIn._id;
+  var liClassName = isMine ? "mine" : "theirs";
 
-  return `
-  <li class="message ${liClassName}">
-    <div class="mesageContainer">
-      <span class="messageBody">
-        ${message.content}
-      </span>
-    </div>
-  </li>
-  `;
+  return `<li class='message ${liClassName}'>
+              <div class='messageContainer'>
+                  <span class='messageBody'>
+                      ${message.content}
+                  </span>
+              </div>
+          </li>`;
 }
