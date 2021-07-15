@@ -1,0 +1,16 @@
+p {
+  width: 13em;
+  background: gold;
+}
+
+.overflow-wrap {
+  overflow-wrap: break-word;
+}
+
+.word-break {
+  word-break: break-all;
+}
+
+.hyphens {
+  hyphens: auto;
+}
