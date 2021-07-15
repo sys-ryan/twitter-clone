@@ -3,6 +3,7 @@ const express = require("express");
 const route = express.Router();
 
 const Chat = require("../../models/Chat");
+const User = require("../../models/User");
 
 route.post("/", async (req, res, next) => {
   if (!req.body.users) {
@@ -36,11 +37,15 @@ route.post("/", async (req, res, next) => {
 
 route.get("/", async (req, res, next) => {
   try {
-    const results = await Chat.find({
+    let results = await Chat.find({
       users: { $elemMatch: { $eq: req.session.user._id } },
     })
       .populate("users")
+      .populate("latestMessage")
       .sort({ updatedAt: -1 });
+
+    results = await User.populate(results, { path: "latestMessage.sender" });
+
     res.status(200).send(results);
   } catch (error) {
     if (!error.statusCode) {
