@@ -5,10 +5,13 @@ $(document).ready(() => {
 
   $.get(`/api/chats/${chatId}/messages`, (data) => {
     let messages = [];
+    let lastSenderId = "";
 
-    data.forEach((message) => {
-      let html = createMessageHtml(message);
+    data.forEach((message, index) => {
+      let html = createMessageHtml(message, data[index + 1], lastSenderId);
       messages.push(html);
+
+      lastSenderId = message.sender._id;
     });
 
     let messagesHtml = messages.join("");
@@ -81,14 +84,30 @@ function addChatMessageHtml(message) {
     return;
   }
 
-  var messageDiv = createMessageHtml(message);
+  var messageDiv = createMessageHtml(message, null, "");
 
   addMessagesHtmlToPage(messageDiv);
 }
 
-function createMessageHtml(message) {
+function createMessageHtml(message, nextMessage, lastSenderId) {
+  let sender = message.sender;
+  let senderName = `${sender.firstName} ${sender.lastName}`;
+  let currentSenderId = sender._id;
+  let nextSenderId = nextMessage != null ? nextMessage.sender._id : "";
+
+  let isFirst = lastSenderId !== currentSenderId;
+  let isLast = nextSenderId !== currentSenderId;
+
   var isMine = message.sender._id == userLoggedIn._id;
   var liClassName = isMine ? "mine" : "theirs";
+
+  if (isFirst) {
+    liClassName += " first";
+  }
+
+  if (isLast) {
+    liClassName += " last";
+  }
 
   return `<li class='message ${liClassName}'>
               <div class='messageContainer'>
