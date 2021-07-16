@@ -56,7 +56,6 @@ route.get("/:chatId", async (req, res, next) => {
         chat = await getChatByUserId(userFound._id, userId);
       }
     }
-    console.log("chat", chat);
     if (!chat) {
       payload.errorMessage =
         "Chat does not exist or you do not have permission to view it.";
@@ -66,8 +65,6 @@ route.get("/:chatId", async (req, res, next) => {
   } catch (error) {
     console.log(error);
   }
-
-  console.log(payload.errorMessage);
   res.status(200).render("chatPage", payload);
 });
 

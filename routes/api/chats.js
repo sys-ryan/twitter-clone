@@ -4,6 +4,7 @@ const route = express.Router();
 
 const Chat = require("../../models/Chat");
 const User = require("../../models/User");
+const Message = require("../../models/Message");
 
 route.post("/", async (req, res, next) => {
   if (!req.body.users) {
@@ -80,6 +81,13 @@ route.get("/:chatId", async (req, res, next) => {
     }
     next(error);
   }
+});
+
+route.get("/:chatId/messages", async (req, res, next) => {
+  let message = await Message.find({ chat: req.params.chatId }).populate(
+    "sender"
+  );
+  res.send(message);
 });
 
 module.exports = route;
