@@ -2,6 +2,18 @@ $(document).ready(() => {
   $.get(`/api/chats/${chatId}`, (data) =>
     $("#chatName").text(getChatName(data))
   );
+
+  $.get(`/api/chats/${chatId}/messages`, (data) => {
+    let messages = [];
+
+    data.forEach((message) => {
+      let html = createMessageHtml(message);
+      messages.push(html);
+    });
+
+    let messagesHtml = messages.join("");
+    addMessagesHtmlToPage(messagesHtml);
+  });
 });
 
 $("#chatNameButton").click(() => {
@@ -31,6 +43,12 @@ $(".inputTextbox").keydown((event) => {
     return false;
   }
 });
+
+function addMessagesHtmlToPage(html) {
+  $(".chatMessages").append(html);
+
+  // TODO: SCROLL TO BOTTOM
+}
 
 function messageSubmitted() {
   var content = $(".inputTextbox").val().trim();
@@ -65,7 +83,7 @@ function addChatMessageHtml(message) {
 
   var messageDiv = createMessageHtml(message);
 
-  $(".chatMessages").append(messageDiv);
+  addMessagesHtmlToPage(messageDiv);
 }
 
 function createMessageHtml(message) {
