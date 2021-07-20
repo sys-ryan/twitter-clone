@@ -17,6 +17,9 @@ $(document).ready(() => {
     let messagesHtml = messages.join("");
     addMessagesHtmlToPage(messagesHtml);
     scrollToBottom(false);
+
+    $(".loadingSpinnerContainer").remove();
+    $(".chatContainer").css("visibility", "visible");
   });
 });
 
