@@ -95,6 +95,9 @@ function messageSubmitted() {
   if (content != "") {
     sendMessage(content);
     $(".inputTextbox").val("");
+
+    socket.emit("stop typing", chatId);
+    typing = false;
   }
 }
 
