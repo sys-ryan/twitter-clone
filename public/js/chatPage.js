@@ -1,7 +1,7 @@
 $(document).ready(() => {
   socket.emit("join room", chatId);
   socket.on("typing", () => {
-    console.log("user is typing");
+    $(".typingDots").show();
   });
 
   $.get(`/api/chats/${chatId}`, (data) =>
