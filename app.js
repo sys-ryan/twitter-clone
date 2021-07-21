@@ -62,6 +62,20 @@ app.get("/", middleware.requireLogin, (req, res, next) => {
 
   res.render("home", payload);
 });
-app.listen(process.env.PORT, () => {
+
+const server = app.listen(process.env.PORT, () => {
   console.log(`The server is running on port ${process.env.PORT}`);
+});
+
+const io = require("socket.io")(server, { pingTimeout: 60000 });
+
+io.on("connection", (socket) => {
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    socket.emit("connected");
+  });
+
+  socket.on("join room", (room) => socket.join(room));
+
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
 });
