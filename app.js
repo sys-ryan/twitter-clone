@@ -49,12 +49,13 @@ app.use("/profile", middleware.requireLogin, profileRoute);
 app.use("/uploads", uploadRoute);
 app.use("/search", middleware.requireLogin, searchRoute);
 app.use("/messages", middleware.requireLogin, messagesRoute);
+app.use("/notifications", middleware.requireLogin, notificationsRoute);
 
 app.use("/api/posts", postsApiRoutes);
 app.use("/api/users", usersApiRoutes);
 app.use("/api/chats", chatsApiRoutes);
 app.use("/api/messages", messagesApiRoutes);
-app.use("/notifications", middleware.requireLogin, notificationsApiRoutes);
+app.use("/api/notifications", middleware.requireLogin, notificationsApiRoutes);
 
 app.get("/", middleware.requireLogin, (req, res, next) => {
   var payload = {
