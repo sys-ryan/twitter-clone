@@ -666,3 +666,19 @@ function messageReceived(newMessage) {
     addChatMessageHtml(newMessage);
   }
 }
+
+function markNotificationsAsOpend(notificationId = null, callback = null) {
+  if (!callback) {
+    callback = () => location.reload();
+  }
+
+  let url = notificationId
+    ? `/api/notifications/${notificationId}/markAsOpened`
+    : `/api/notifications/markAsOpened`;
+
+  $.ajax({
+    url,
+    type: "PUT",
+    success: () => callback(),
+  });
+}

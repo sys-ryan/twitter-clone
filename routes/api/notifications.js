@@ -26,4 +26,16 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.put("/:id/markAsOpened", async (req, res, next) => {
+  try {
+    await Notification.findByIdAndUpdate(req.params.id, { opened: true });
+    res.sendStatus(204);
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+      next(error);
+    }
+  }
+});
+
 module.exports = router;
