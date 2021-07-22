@@ -4,6 +4,7 @@ const route = express.Router();
 
 const Post = require("../../models/Post");
 const User = require("../../models/User");
+const Notification = require("../../models/Notification");
 
 route.get("/", async (req, res, next) => {
   const searchObj = req.query;
@@ -79,7 +80,16 @@ route.post("/", async (req, res, next) => {
 
   try {
     let newPost = await Post.create(postData);
-    newPost = await newPost.populate("postedBy").execPopulate();
+    newPost = await Post.populate(newPost, { path: "replyTo" });
+
+    if (newPost.replyTo) {
+      await Notification.insertNotification(
+        newPost.replyTo.postedBy,
+        req.session.user._id,
+        "reply",
+        newPost._id
+      );
+    }
 
     res.status(201).send(newPost);
   } catch (err) {
@@ -113,6 +123,15 @@ route.put("/:id/like", async (req, res, next) => {
       { [option]: { likes: userId } },
       { new: true }
     );
+
+    if (!isLiked) {
+      await Notification.insertNotification(
+        post.postedBy,
+        userId,
+        "postLike",
+        post._id
+      );
+    }
 
     res.status(200).send(post);
   } catch (error) {
@@ -152,6 +171,15 @@ route.post("/:id/retweet", async (req, res, next) => {
       { [option]: { retweetUsers: userId } },
       { new: true }
     );
+
+    if (!deletedPost) {
+      await Notification.insertNotification(
+        post.postedBy,
+        userId,
+        "retweet",
+        post._id
+      );
+    }
 
     return res.status(200).send(post);
   } catch (error) {
