@@ -776,3 +776,7 @@ button span {
 .loadingSpinnerContainer img {
   width: 50%;
 }
+
+.resultListItem.active {
+  background-color: var(--blueBackground);
+}
