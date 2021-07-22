@@ -5,6 +5,7 @@ const route = express.Router();
 const Chat = require("../../models/Chat");
 const Message = require("../../models/Message");
 const User = require("../../models/User");
+const Notification = require("../../models/Notification");
 
 route.post("/", async (req, res, next) => {
   if (!req.body.content || !req.body.chatId) {
@@ -23,7 +24,10 @@ route.post("/", async (req, res, next) => {
     message = await message.populate("sender").populate("chat").execPopulate();
     message = await User.populate(message, { path: "chat.users" });
 
-    await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
+    const chat = await Chat.findByIdAndUpdate(req.body.chatId, {
+      latestMessage: message,
+    });
+    insertNotifications(chat, message);
     res.status(201).send(message);
   } catch (error) {
     if (!error.statusCode) {
@@ -32,5 +36,20 @@ route.post("/", async (req, res, next) => {
     next(error);
   }
 });
+
+function insertNotifications(chat, message) {
+  chat.users.forEach((userId) => {
+    if (userId == message.sender._id.toString()) {
+      return;
+    }
+
+    Notification.insertNotification(
+      userId,
+      message.sender._id,
+      "newMessage",
+      message.chat._id
+    );
+  });
+}
 
 module.exports = route;
