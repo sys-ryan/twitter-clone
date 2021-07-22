@@ -11,7 +11,7 @@ router.get("/", async (req, res, next) => {
   try {
     let notifications = await Notification.find({
       userTo: req.session.user._id,
-      notificationsType: { $ne: "newMessage" },
+      notificationType: { $ne: "newMessage" },
     })
       .populate("userTo")
       .populate("userFrom")
