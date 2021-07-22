@@ -7,6 +7,7 @@ const fs = require("fs");
 const route = express.Router();
 
 const User = require("../../models/User");
+const Notification = require("../../models/Notification");
 
 route.get("/", async (req, res, next) => {
   let searchObj = req.query;
@@ -56,6 +57,15 @@ route.put("/:userId/follow", async (req, res, next) => {
     await User.findByIdAndUpdate(userId, {
       [option]: { followers: req.session.user._id },
     });
+
+    if (!isFollowing) {
+      await Notification.insertNotification(
+        userId,
+        req.session.user._id,
+        "follow",
+        req.session.user._id
+      );
+    }
 
     res.status(200).send(req.session.user);
   } catch (err) {
