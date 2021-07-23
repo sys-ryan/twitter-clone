@@ -177,13 +177,3 @@ function createMessageHtml(message, nextMessage, lastSenderId) {
               </div>
           </li>`;
 }
-
-function scrollToBottom(animated) {
-  const container = $(".chatMessages");
-  const scrollHeight = container[0].scrollHeight;
-  if (animated) {
-    container.animate({ scrollTop: scrollHeight }, "slow");
-  } else {
-    container.scrollTop(scrollHeight);
-  }
-}

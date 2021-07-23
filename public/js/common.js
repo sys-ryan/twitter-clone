@@ -47,6 +47,7 @@ $("#submitPostButton, #submitReplyButton").click((event) => {
 
   $.post("/api/posts", data, (postData, status, xhr) => {
     if (postData.replyTo) {
+      emitNotification(postData.replyTo.postedBy);
       location.reload();
     } else {
       const html = createPostHtml(postData);
@@ -431,6 +432,7 @@ $(document).on("click", ".likeButton", (event) => {
 
       if (postData.likes.includes(userLoggedIn._id)) {
         button.addClass("active");
+        emitNotification(postData.postedBy);
       } else {
         button.removeClass("active");
       }
@@ -454,6 +456,7 @@ $(document).on("click", ".followButton", (event) => {
       if (data.following && data.following.includes(userId)) {
         button.addClass("following");
         button.text("Following");
+        emitNotification(userId);
       } else {
         button.removeClass("following");
         button.text("Follow");
@@ -496,6 +499,7 @@ $(document).on("click", ".retweetButton", (event) => {
 
       if (postData.retweetUsers.includes(userLoggedIn._id)) {
         button.addClass("active");
+        emitNotification(postData.postedBy);
       } else {
         button.removeClass("active");
       }
@@ -724,4 +728,14 @@ function refreshNotificationsBadge() {
       $("#notificationsBadge").text("").removeClass("active");
     }
   });
+}
+
+function scrollToBottom(animated) {
+  const container = $(".chatMessages");
+  const scrollHeight = container[0].scrollHeight;
+  if (animated) {
+    container.animate({ scrollTop: scrollHeight }, "slow");
+  } else {
+    container.scrollTop(scrollHeight);
+  }
 }
