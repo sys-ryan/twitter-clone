@@ -8,11 +8,17 @@ const User = require("../../models/User");
 const Notification = require("../../models/Notification");
 
 router.get("/", async (req, res, next) => {
+  let searchObj = {
+    userTo: req.session.user._id,
+    notificationType: { $ne: "newMessage" },
+  };
+
+  if (req.query.unreadOnly) {
+    searchObj.opened = false;
+  }
+
   try {
-    let notifications = await Notification.find({
-      userTo: req.session.user._id,
-      notificationType: { $ne: "newMessage" },
-    })
+    let notifications = await Notification.find(searchObj)
       .populate("userTo")
       .populate("userFrom")
       .sort({ createdAt: -1 });
