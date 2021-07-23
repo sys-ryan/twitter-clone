@@ -32,6 +32,24 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.get("/latest", async (req, res, next) => {
+  try {
+    let notifications = await Notification.findOne({
+      userTo: req.session.user._id,
+    })
+      .populate("userTo")
+      .populate("userFrom")
+      .sort({ createdAt: -1 });
+
+    res.status(200).send(notifications);
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+});
+
 router.put("/:id/markAsOpened", async (req, res, next) => {
   try {
     const result = await Notification.findByIdAndUpdate(req.params.id, {
@@ -62,5 +80,4 @@ router.put("/markAsOpened", async (req, res, next) => {
     }
   }
 });
-
 module.exports = router;
