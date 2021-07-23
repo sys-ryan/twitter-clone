@@ -681,9 +681,7 @@ function getOtherChatUsers(users) {
 }
 
 function messageReceived(newMessage) {
-  if ($(".chatContainer").length == 0) {
-    // not in the message page
-    // show popup notification
+  if ($(`[data-room="${newMessage.chat._id}"]`).length == 0) {
     showMessagePopup(newMessage);
   } else {
     addChatMessageHtml(newMessage);
@@ -829,8 +827,16 @@ function createChatHtml(chatData) {
   let image = getChatImageElements(chatData); // TODO
   let latestMessage = getLatestMessage(chatData.latestMessage);
 
+  let activeClass =
+    chatData.latestMessage &&
+    chatData.latestMessage.readBy.includes(userLoggedIn._id)
+      ? ""
+      : "active";
+  console.log(chatData.latestMessage.readBy.includes(userLoggedIn._id));
+  console.log(activeClass);
+
   return `
-    <a href="/messages/${chatData._id}" class="resultListItem">
+    <a href="/messages/${chatData._id}" class="resultListItem ${activeClass}">
     ${image}
       <div class="resultsDetailsContainer ellipsis">
         <span class="heading ellipsis">${chatName}</span>
