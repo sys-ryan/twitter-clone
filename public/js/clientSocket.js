@@ -14,6 +14,7 @@ socket.on("message received", (newMessage) => {
 
 socket.on("notification received", (newNotification) => {
   $.get("/api/notifications/latest", (notificationData) => {
+    showNotificationPopup(notificationData);
     refreshNotificationsBadge();
   });
 });
