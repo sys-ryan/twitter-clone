@@ -28,6 +28,7 @@ $(document).ready(() => {
     let messagesHtml = messages.join("");
     addMessagesHtmlToPage(messagesHtml);
     scrollToBottom(false);
+    markAllMessagesAsRead();
 
     $(".loadingSpinnerContainer").remove();
     $(".chatContainer").css("visibility", "visible");
@@ -176,4 +177,12 @@ function createMessageHtml(message, nextMessage, lastSenderId) {
                 </span>
               </div>
           </li>`;
+}
+
+function markAllMessagesAsRead() {
+  $.ajax({
+    url: `/api/chats/${chatId}/messages/markAsRead`,
+    type: "PUT",
+    success: () => refreshMessagesBadge(),
+  });
 }

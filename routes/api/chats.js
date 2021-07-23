@@ -95,4 +95,20 @@ route.get("/:chatId/messages", async (req, res, next) => {
   res.send(message);
 });
 
+route.put("/:chatId/messages/markAsRead", async (req, res, next) => {
+  try {
+    await Message.updateMany(
+      { chat: req.params.chatId },
+      { $addToSet: { readBy: req.session.user._id } }
+    );
+
+    res.sendStatus(204);
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+});
+
 module.exports = route;
