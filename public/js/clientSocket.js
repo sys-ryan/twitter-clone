@@ -10,5 +10,14 @@ socket.on("connected", () => {
 
 socket.on("message received", (newMessage) => {
   messageReceived(newMessage);
-  scrollToBottom(true);
 });
+
+socket.on("notification received", (newNotification) => {
+  console.log("notification");
+});
+
+function emitNotification(userId) {
+  if (userId === userLoggedIn._id) return;
+
+  socket.emit("notification received", userId);
+}
