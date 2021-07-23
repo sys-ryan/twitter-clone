@@ -507,6 +507,18 @@ $(document).on("click", ".post", (event) => {
   }
 });
 
+$(document).on("click", ".notification.active", (event) => {
+  const container = $(event.target);
+  console.log(container);
+  const notificationId = container.data().id;
+
+  const href = container.attr("href");
+  event.preventDefault();
+
+  const callback = () => (window.location = href);
+  markNotificationsAsOpend(notificationId, callback);
+});
+
 function outputPosts(results, container) {
   container.html("");
 
@@ -671,6 +683,8 @@ function markNotificationsAsOpend(notificationId = null, callback = null) {
   if (!callback) {
     callback = () => location.reload();
   }
+
+  console.log(notificationId);
 
   let url = notificationId
     ? `/api/notifications/${notificationId}/markAsOpened`

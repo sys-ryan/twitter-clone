@@ -28,8 +28,11 @@ router.get("/", async (req, res, next) => {
 
 router.put("/:id/markAsOpened", async (req, res, next) => {
   try {
-    await Notification.findByIdAndUpdate(req.params.id, { opened: true });
-    res.sendStatus(204);
+    const result = await Notification.findByIdAndUpdate(req.params.id, {
+      opened: true,
+    });
+    res.send(result);
+    // res.sendStatus(204);
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
