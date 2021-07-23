@@ -41,4 +41,20 @@ router.put("/:id/markAsOpened", async (req, res, next) => {
   }
 });
 
+router.put("/markAsOpened", async (req, res, next) => {
+  try {
+    const result = await Notification.updateMany(
+      { userTo: req.session.user._id },
+      { opened: true }
+    );
+    res.send(result);
+    // res.sendStatus(204);
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+      next(error);
+    }
+  }
+});
+
 module.exports = router;
