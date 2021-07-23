@@ -45,6 +45,11 @@ route.get("/", async (req, res, next) => {
       .populate("latestMessage")
       .sort({ updatedAt: -1 });
 
+    if (req.query.unreadOnly) {
+      results = results.filter((result) => {
+        return !result.latestMessage.readBy.includes(req.session.user._id);
+      });
+    }
     results = await User.populate(results, { path: "latestMessage.sender" });
 
     res.status(200).send(results);
