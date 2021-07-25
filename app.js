@@ -8,6 +8,8 @@ const session = require("express-session");
 
 const middleware = require("./middleware");
 
+const server_config = require("./env/server-config.json");
+
 const app = express();
 
 app.set("view engine", "pug");
@@ -17,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
-    secret: "ryan kim",
+    secret: server_config.session_secret,
     resave: true,
     saveUninitialized: false,
   })
@@ -67,7 +69,7 @@ app.get("/", middleware.requireLogin, (req, res, next) => {
   res.render("home", payload);
 });
 
-const server = app.listen(process.env.PORT, () => {
+const server = app.listen(server_config.PORT, () => {
   console.log(`The server is running on port ${process.env.PORT}`);
 });
 
