@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const db_config = require("../env/db-config.json");
+
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useUnifiedTopology", true);
 mongoose.set("useFindAndModify", false);
@@ -10,7 +12,7 @@ class Database {
 
   connect() {
     mongoose
-      .connect(process.env.MONGODB_URL, {
+      .connect(db_config.MONGODB_URL, {
         useNewUrlParser: true,
         useCreateIndex: true,
       })
