@@ -8,6 +8,7 @@ const session = require("express-session");
 
 const middleware = require("./middleware");
 
+
 const server_config = require("./env/server-config.json");
 
 const app = express();
@@ -19,7 +20,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
+
     secret: server_config.session_secret,
+
     resave: true,
     saveUninitialized: false,
   })
@@ -29,6 +32,7 @@ app.use(
 const loginRoute = require("./routes/loginRoutes");
 const registerRoute = require("./routes/registerRoutes");
 const logoutRoute = require("./routes/logout");
+
 const postRoute = require("./routes/postRoute");
 const profileRoute = require("./routes/profileRoute");
 const uploadRoute = require("./routes/uploadRoutes");
@@ -43,9 +47,11 @@ const chatsApiRoutes = require("./routes/api/chats");
 const messagesApiRoutes = require("./routes/api/messages");
 const notificationsApiRoutes = require("./routes/api/notifications");
 
+
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
 app.use("/logout", logoutRoute);
+
 app.use("/posts", middleware.requireLogin, postRoute);
 app.use("/profile", middleware.requireLogin, profileRoute);
 app.use("/uploads", uploadRoute);
@@ -59,10 +65,12 @@ app.use("/api/chats", chatsApiRoutes);
 app.use("/api/messages", messagesApiRoutes);
 app.use("/api/notifications", middleware.requireLogin, notificationsApiRoutes);
 
+
 app.get("/", middleware.requireLogin, (req, res, next) => {
   var payload = {
     pageTitle: "Home",
     userLoggedIn: req.session.user,
+
     userLoggedInJs: JSON.stringify(req.session.user),
   };
 

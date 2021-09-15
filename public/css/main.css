@@ -23,6 +23,7 @@ body {
 
 * {
   outline: none !important;
+
 }
 
 a {
@@ -60,6 +61,7 @@ nav a {
   align-items: center;
   justify-content: center;
   position: relative;
+
 }
 
 nav a.blue {
@@ -114,7 +116,6 @@ button span {
 .titleContainer h1 {
   flex: 1;
 }
-
 .postFormContainer {
   display: flex;
   padding: var(--spacing);
