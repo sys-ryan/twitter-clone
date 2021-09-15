@@ -29,10 +29,28 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    profile: {
+
+    profilePic: {
       type: String,
-      default: "/images/profilePic.png",
+      default: "/images/profilePic.jpeg",
     },
+    coverPhoto: {
+      type: String,
+    },
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+    retweets: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+    following: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: true,
